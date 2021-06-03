@@ -7,7 +7,7 @@ const int WIN_WIDTH = 600;
 const int WIN_HEIGHT = 600;
 
 // プログラムは WinMain から始まります
-int WINAPI WinMain(_In_ HINSTANCE hInstance,_In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 	//ウィンドウモードに設定
 	ChangeWindowMode(TRUE);
@@ -29,7 +29,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,_In_opt_ HINSTANCE hPrevInstance, _I
 	SetBackgroundColor(0x00, 0x00, 0xAF);
 
 	// ＤＸライブラリ初期化処理
-	if (DxLib_Init() == -1)		
+	if (DxLib_Init() == -1)
 	{
 		return -1;			// エラーが起きたら直ちに終了
 	}
@@ -38,11 +38,20 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,_In_opt_ HINSTANCE hPrevInstance, _I
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	//画像などのリソースデータの変数宣言と読み込み
-
+	int back1 = LoadGraph("background.png");
+	int back2 = LoadGraph("background2.png");
 
 	//ゲームループで使う変数の宣言
 	int PlayerX = 250, PlayerY = 250;
-	int EnemyX = 10, EnemyY = 10;
+	int Enemy1X = 10, Enemy1Y = 10;
+	int Enemy2X = 500, Enemy2Y = 100, Enemy2R = 16;
+	int Speed = 2, Speed2 = 2;
+	int bulx = -10, buly = -10, bulr = 10, isbulFlag = 0;
+	int bul2x = -10, bul2y = -10, bul2r = 10;
+	int bul3x = -10, bul3y = -10, bul3r = 10;
+	
+	int bgX = 0, bgY = 0;
+	int bg2X = 0, bg2Y = -400;
 
 	//最新のキーボード情報用
 	char keys[256] = { 0 };
@@ -65,24 +74,76 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,_In_opt_ HINSTANCE hPrevInstance, _I
 		ClearDrawScreen();
 
 		//更新処理
-		if (keys[KEY_INPUT_UP] == 1)
+		//プレイヤー
+		if (keys[KEY_INPUT_UP] == 1 || keys[KEY_INPUT_W] == 1)
 		{
 			PlayerY -= 5;
 		}
-		if (keys[KEY_INPUT_DOWN] == 1)
+		if (keys[KEY_INPUT_DOWN] == 1 || keys[KEY_INPUT_S] == 1)
 		{
 			PlayerY += 5;
 		}
-		if (keys[KEY_INPUT_RIGHT] == 1)
+		if (keys[KEY_INPUT_RIGHT] == 1 || keys[KEY_INPUT_D] == 1)
 		{
 			PlayerX += 5;
 		}
-		if (keys[KEY_INPUT_LEFT] == 1)
+		if (keys[KEY_INPUT_LEFT] == 1 || keys[KEY_INPUT_A] == 1)
 		{
 			PlayerX -= 5;
 		}
 
-		if (PlayerX > 600)
+		//弾の処理
+		if (keys[KEY_INPUT_SPACE] == 1 && oldkeys[KEY_INPUT_SPACE] == 1)
+		{
+			if (isbulFlag == 0)
+			{
+				bulx = PlayerX + 15;
+				buly = PlayerY + 15;
+
+				bul2x = PlayerX + 15;
+				bul2y = PlayerY + 15;
+				
+				bul3x = PlayerX + 15;
+				bul3y = PlayerY + 15;
+
+				isbulFlag = 1;
+			}
+		}
+
+		if (isbulFlag == 1)
+		{
+			buly -= 10;
+
+			bul2x -= 5;
+			bul2y -= 10;
+
+			bul3x += 5;
+			bul3y -= 10;
+			if (buly < -20|| bul2y < -20 || bul3y < -20)
+			{
+				isbulFlag = 0;
+			}
+		}
+		
+		//壁に当たる
+		if (PlayerX < 0)
+		{
+			PlayerX = 0;
+		}
+		if (PlayerX + 32 > 600)
+		{
+			PlayerX = 568;
+		}
+		if (PlayerY < 0)
+		{
+			PlayerY = 0;
+		}
+		if (PlayerY + 32 > 400)
+		{
+			PlayerY = 368;
+		}
+		//パックマン壁端移動-
+		/*if (PlayerX > 600)
 		{
 			PlayerX = -32;
 		}
@@ -97,11 +158,52 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,_In_opt_ HINSTANCE hPrevInstance, _I
 		if (PlayerY > 400)
 		{
 			PlayerY = -32;
+		}*/
+
+		//敵の当たり判定
+		
+
+		//敵の行動(レッド)
+		if (Enemy1X + 30 >= 600 || Enemy1X <= 0)
+		{
+			Speed *= -1;
 		}
+		Enemy1X += Speed;
+
+		//敵の行動(イエロー)
+		if (Enemy2X + 16 >= 600 || Enemy2X - 16 <= 0)
+		{
+			Speed2 *= -1;
+		}
+		Enemy2X += Speed2;
+
 		//描画処理
+		//背景スクロール
+		DrawGraph(bgX, bgY, back1, FALSE);
+		DrawGraph(bg2X, bg2Y, back2, FALSE);
+		bgY += 2;
+		bg2Y += 2;
+		if (bgY > 400)
+		{
+			bgY = -395;
+		}
+		if (bg2Y > 400)
+		{
+			bg2Y = -395;
+		}
+		
+		//実機,プレイヤー描画
+		DrawCircle(bulx, buly, bulr, GetColor(255, 255, 255), TRUE);
+		DrawCircle(bul2x, bul2y, bul2r, GetColor(255, 255, 255), TRUE);
+		DrawCircle(bul3x, bul3y, bul3r, GetColor(255, 255, 255), TRUE);
+		
 		DrawBox(PlayerX, PlayerY, PlayerX + 32, PlayerY + 32, GetColor(255, 255, 255), TRUE);
+		DrawBox(Enemy1X, Enemy1Y, Enemy1X + 32, Enemy1Y + 32, GetColor(255, 0, 0), TRUE);
+		DrawCircle(Enemy2X, Enemy2Y, Enemy2R, GetColor(255, 255, 0),TRUE);
+		
+
+		//デバック
 		DrawBox(0, 400, 600, 600, GetColor(0, 0, 0), TRUE);
-		DrawBox(EnemyX, EnemyY, EnemyX + 32, EnemyY + 32, GetColor(255, 0, 0),TRUE);
 		DrawFormatString(0, 410, GetColor(255, 255, 255),
 			"(左上 PlayerX: %3dpx, PlayerY: %3dpx)", PlayerX, PlayerY);
 		DrawFormatString(0, 430, GetColor(255, 255, 255),
@@ -110,6 +212,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,_In_opt_ HINSTANCE hPrevInstance, _I
 			"(左下 PlayerX: %3dpx, PlayerY: %3dpx)", PlayerX, PlayerY + 32);
 		DrawFormatString(0, 470, GetColor(255, 255, 255),
 			"(右下 PlayerX: %3dpx, PlayerY: %3dpx)", PlayerX + 32, PlayerY + 32);
+		DrawFormatString(0, 490, GetColor(255, 255, 255),
+			"(Enemy1:X%3dpx,Y%3dpx)", Enemy1X, Enemy1Y);
+		DrawFormatString(0, 510, GetColor(255, 255, 255),
+			"(Enemy2:X%3dpx,Y%3dpx)", Enemy2X, Enemy2Y);
+		DrawFormatString(0, 530, GetColor(255, 255, 255),
+			"背景:Y%3dpx", bgY);
+		DrawFormatString(100, 530, GetColor(255, 255, 255),
+			"背景:Y%3dpx", bg2Y);
+	
 		//(ダブルバッファ)裏面
 		ScreenFlip();
 
