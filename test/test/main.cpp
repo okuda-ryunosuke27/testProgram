@@ -1,4 +1,5 @@
 #include "DxLib.h"
+#include <math.h>
 
 const char TITLE[] = "TestProgram";
 
@@ -40,12 +41,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//画像などのリソースデータの変数宣言と読み込み
 	int back1 = LoadGraph("background.png");
 	int back2 = LoadGraph("background2.png");
+	int player = LoadGraph("ico.jpg");
 
 	//ゲームループで使う変数の宣言
 	int PlayerX = 250, PlayerY = 250;
-	int Enemy1X = 10, Enemy1Y = 10;
+
+	int Enemy1X = 10, Enemy1Y = 10, Enemy1R = 16;
 	int Enemy2X = 500, Enemy2Y = 100, Enemy2R = 16;
+	int E_getpos, E_getpos2, E_getpos3, isEnemyAlive = 1, enemyTymer = 1;
 	int Speed = 2, Speed2 = 2;
+
 	int bulx = -10, buly = -10, bulr = 10, isbulFlag = 0;
 	int bul2x = -10, bul2y = -10, bul2r = 10;
 	int bul3x = -10, bul3y = -10, bul3r = 10;
@@ -119,12 +124,34 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 			bul3x += 5;
 			bul3y -= 10;
+
+			
 			if (buly < -20|| bul2y < -20 || bul3y < -20)
 			{
 				isbulFlag = 0;
 			}
 		}
-		
+		E_getpos = sqrt((Enemy1X - bulx) * (Enemy1X - bulx) + (Enemy1Y - buly) * (Enemy1Y - buly));
+		if ( isbulFlag == 1 &&isEnemyAlive == 1)
+		{
+			if (E_getpos < bulr + Enemy1R)
+			{
+				isbulFlag = 0;
+				isEnemyAlive = 0;
+
+				bulx = -100;
+				buly = -100;
+			}
+		}
+		if (isEnemyAlive == 0)
+		{
+			enemyTymer = enemyTymer - 1;
+			if (enemyTymer < 0)
+			{
+				isEnemyAlive = 1;
+				enemyTymer = 120;
+			}
+		}
 		//壁に当たる
 		if (PlayerX < 0)
 		{
@@ -197,11 +224,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		DrawCircle(bul2x, bul2y, bul2r, GetColor(255, 255, 255), TRUE);
 		DrawCircle(bul3x, bul3y, bul3r, GetColor(255, 255, 255), TRUE);
 		
-		DrawBox(PlayerX, PlayerY, PlayerX + 32, PlayerY + 32, GetColor(255, 255, 255), TRUE);
-		DrawBox(Enemy1X, Enemy1Y, Enemy1X + 32, Enemy1Y + 32, GetColor(255, 0, 0), TRUE);
+		DrawGraph(PlayerX,PlayerY,player,TRUE);
+		//DrawBox(PlayerX, PlayerY, PlayerX + 32, PlayerY + 32, GetColor(255, 255, 255), TRUE);
+		if (isEnemyAlive == 1)
+		{
+			DrawBox(Enemy1X, Enemy1Y, Enemy1X + 32, Enemy1Y + 32, GetColor(255, 0, 0), TRUE);
+		}
 		DrawCircle(Enemy2X, Enemy2Y, Enemy2R, GetColor(255, 255, 0),TRUE);
 		
-
 		//デバック
 		DrawBox(0, 400, 600, 600, GetColor(0, 0, 0), TRUE);
 		DrawFormatString(0, 410, GetColor(255, 255, 255),
@@ -240,7 +270,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 	}
 	
-	DxLib_End();				// ＤＸライブラリ使用の終了処理
+	DxLib_End();// ＤＸライブラリ使用の終了処理
 
 	return 0;				// ソフトの終了 
 }
