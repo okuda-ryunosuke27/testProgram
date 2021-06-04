@@ -52,8 +52,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int Speed = 2, Speed2 = 2;
 
 	int bulx = -10, buly = -10, bulr = 10, isbulFlag = 0;
-	int bul2x = -10, bul2y = -10, bul2r = 10;
-	int bul3x = -10, bul3y = -10, bul3r = 10;
+	int bul2x = -10, bul2y = -10, bul2r = 10, isbulFlag2 = 0;
+	int bul3x = -10, bul3y = -10, bul3r = 10, isbulFlag3 = 0;
 	
 	int bgX = 0, bgY = 0;
 	int bg2X = 0, bg2Y = -400;
@@ -100,7 +100,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//íeÇÃèàóù
 		if (keys[KEY_INPUT_SPACE] == 1 && oldkeys[KEY_INPUT_SPACE] == 1)
 		{
-			if (isbulFlag == 0)
+			if (isbulFlag == 0 || isbulFlag2 ==0 || isbulFlag == 0)
 			{
 				bulx = PlayerX + 15;
 				buly = PlayerY + 15;
@@ -112,6 +112,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				bul3y = PlayerY + 15;
 
 				isbulFlag = 1;
+				isbulFlag2 = 1;
+				isbulFlag3 = 1;
 			}
 		}
 
@@ -119,20 +121,33 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		{
 			buly -= 10;
 
-			bul2x -= 5;
-			bul2y -= 10;
-
-			bul3x += 5;
-			bul3y -= 10;
-
-			
-			if (buly < -20|| bul2y < -20 || bul3y < -20)
+			if (buly < -20)
 			{
 				isbulFlag = 0;
 			}
 		}
+		if (isbulFlag2 == 1)
+		{
+			bul2x -= 5;
+			bul2y -= 10;
+			if (bul2y < -20)
+			{
+				isbulFlag2 = 0;
+			}
+		} 
+		if (isbulFlag3 == 1)
+		{
+			bul3x += 5;
+			bul3y -= 10;
+			if (bul3y < -20)
+			{
+				isbulFlag3 = 0;
+			}
+		}
 		E_getpos = sqrt((Enemy1X - bulx) * (Enemy1X - bulx) + (Enemy1Y - buly) * (Enemy1Y - buly));
-		if ( isbulFlag == 1 &&isEnemyAlive == 1)
+		E_getpos2 = sqrt((Enemy1X - bul2x) * (Enemy1X - bul2x) + (Enemy1Y - bul2y) * (Enemy1Y - bul2y));
+		E_getpos3 = sqrt((Enemy1X - bul3x) * (Enemy1X - bul3x) + (Enemy1Y - bul3y) * (Enemy1Y - bul3y));
+		if ( isbulFlag == 1 || isbulFlag2 == 1 || isbulFlag3 == 1 || isEnemyAlive == 1)
 		{
 			if (E_getpos < bulr + Enemy1R)
 			{
@@ -141,6 +156,20 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 				bulx = -100;
 				buly = -100;
+			}
+			if (E_getpos2 < bul2r + Enemy1R)
+			{
+				isbulFlag2 = 0;
+				isEnemyAlive = 0;
+				bul2x = -100;
+				bul2y = -100;
+			}
+			if (E_getpos3 < bul2r + Enemy1R)
+			{
+				isbulFlag3 = 0;
+				isEnemyAlive = 0;
+				bul3x = -100;
+				bul3y = -100;
 			}
 		}
 		if (isEnemyAlive == 0)
@@ -248,7 +277,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			"(Enemy2:X%3dpx,Y%3dpx)", Enemy2X, Enemy2Y);
 		DrawFormatString(0, 530, GetColor(255, 255, 255),
 			"îwåi:Y%3dpx", bgY);
-		DrawFormatString(100, 530, GetColor(255, 255, 255),
+		DrawFormatString(110, 530, GetColor(255, 255, 255),
 			"îwåi:Y%3dpx", bg2Y);
 	
 		//(É_ÉuÉãÉoÉbÉtÉ@)ó†ñ 
