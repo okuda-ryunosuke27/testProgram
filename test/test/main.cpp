@@ -10,39 +10,39 @@ const int WIN_HEIGHT = 600;
 
 //ゲームループで使う変数の宣言
 typedef struct {
-	float PlayerX;
-	float	PlayerY;
+	int PlayerX;
+	int PlayerY;
 }Player;
 typedef struct {
-	float EnemyX;
-	float EnemyY;
-	float EnemyR;
+	int EnemyX;
+	int EnemyY;
+	int EnemyR;
 	int isEnemyAlive;
 	int enemyTymer;
 }Enemy;
 typedef struct {
-	float EnemyX;
-	float EnemyY;
-	float EnemyR;
+	int EnemyX;
+	int EnemyY;
+	int EnemyR;
 	int isEnemyAlive;
 	int enemyTymer;
 }Enemy2;
 typedef struct {
-	float bulX;
-	float bulY;
-	float bulR;
+	int bulX;
+	int bulY;
+	int bulR;
 	int isbulFlag;
 }Bullet;
 typedef struct {
-	float bulX;
-	float bulY;
-	float bulR;
+	int bulX;
+	int bulY;
+	int bulR;
 	int isbulFlag;
 }Bullet2;
 typedef struct {
-	float bulX;
-	float bulY;
-	float bulR;
+	int bulX;
+	int bulY;
+	int bulR;
 	int isbulFlag;
 }Bullet3;
 Player play;
@@ -55,7 +55,7 @@ Bullet3 bul3;
 
 int E_getpos, E_getpos2, E_getpos3;
 int E_getpos4, E_getpos5, E_getpos6;
-float Speed = 2.0f, Speed2 = 2.0f, Speed3 = 2.0f;
+int Speed = 2.0f, Speed2 = 2.0f, Speed3 = 2.0f;
 int enemycount = 0;
 
 int bgX = 0, bgY = 0;
@@ -179,9 +179,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 
 			//実機,プレイヤー描画
-			DrawCircleAA(bul.bulX, bul.bulY, bul.bulR, GetColor(255, 255, 255), TRUE);
-			DrawCircleAA(bul2.bulX, bul2.bulY, bul2.bulR, GetColor(255, 255, 255), TRUE);
-			DrawCircleAA(bul3.bulX, bul3.bulY, bul3.bulR, GetColor(255, 255, 255), TRUE);
+			DrawCircle(bul.bulX, bul.bulY, bul.bulR, GetColor(255, 255, 255), TRUE);
+			DrawCircle(bul2.bulX, bul2.bulY, bul2.bulR, GetColor(255, 255, 255), TRUE);
+			DrawCircle(bul3.bulX, bul3.bulY, bul3.bulR, GetColor(255, 255, 255), TRUE);
 
 			DrawGraph(play.PlayerX, play.PlayerY, player, TRUE);
 			//DrawBox(PlayerX, PlayerY, PlayerX + 32, PlayerY + 32, GetColor(255, 255, 255), TRUE);
@@ -324,7 +324,7 @@ void BulletUpdata()
 
 	if (bul.isbulFlag == 1)
 	{
-		bul.bulY -= 10.0f;
+		bul.bulY -= 10;
 
 		if (bul.bulY < -20)
 		{
@@ -333,8 +333,8 @@ void BulletUpdata()
 	}
 	if (bul2.isbulFlag == 1)
 	{
-		bul2.bulX -= 5.0f;
-		bul2.bulY -= 10.0f;
+		bul2.bulX -= 5;
+		bul2.bulY -= 10;
 		if (bul2.bulY < -20)
 		{
 			bul2.isbulFlag = 0;
@@ -342,53 +342,53 @@ void BulletUpdata()
 	}
 	if (bul3.isbulFlag == 1)
 	{
-		bul3.bulX += 5.0f;
-		bul3.bulY -= 10.0f;
+		bul3.bulX += 5;
+		bul3.bulY -= 10;
 		if (bul3.bulY < -20)
 		{
 			bul3.isbulFlag = 0;
 		}
 	}
-	E_getpos = sqrtf((enemy.EnemyX - bul.bulX) * (enemy.EnemyX - bul.bulX) + (enemy.EnemyY - bul.bulY) * (enemy.EnemyY - bul.bulY));
-	E_getpos2 = sqrtf((enemy.EnemyX - bul2.bulX) * (enemy.EnemyX - bul2.bulX) + (enemy.EnemyY - bul2.bulY) * (enemy.EnemyY - bul2.bulY));
-	E_getpos3 = sqrtf((enemy.EnemyX - bul3.bulX) * (enemy.EnemyX - bul3.bulX) + (enemy.EnemyY - bul3.bulY) * (enemy.EnemyY - bul3.bulY));
+	E_getpos = sqrt((enemy.EnemyX - bul.bulX) * (enemy.EnemyX - bul.bulX) + (enemy.EnemyY - bul.bulY) * (enemy.EnemyY - bul.bulY));
+	E_getpos2 = sqrt((enemy.EnemyX - bul2.bulX) * (enemy.EnemyX - bul2.bulX) + (enemy.EnemyY - bul2.bulY) * (enemy.EnemyY - bul2.bulY));
+	E_getpos3 = sqrt((enemy.EnemyX - bul3.bulX) * (enemy.EnemyX - bul3.bulX) + (enemy.EnemyY - bul3.bulY) * (enemy.EnemyY - bul3.bulY));
 	if (bul.isbulFlag == 1 || bul2.isbulFlag == 1 || bul3.isbulFlag == 1 || enemy.isEnemyAlive == 1)
 	{
 		if (E_getpos < bul.bulR + enemy.EnemyR)
 		{
 			bul.isbulFlag = 0;
 			enemy.isEnemyAlive = 0;
-			enemy.EnemyX = -200.0f;
-			enemy.EnemyY = -200.0f;
+			enemy.EnemyX = -200;
+			enemy.EnemyY = -200;
 			Speed = 0;
 			enemycount += 10;
 
-			bul.bulX = -100.0f;
-			bul.bulY = -100.0f;
+			bul.bulX = -100;
+			bul.bulY = -100;
 		}
 		if (E_getpos2 < bul2.bulR + enemy.EnemyR)
 		{
 			bul2.isbulFlag = 0;
 			enemy.isEnemyAlive = 0;
-			enemy.EnemyX = -200.0f;
-			enemy.EnemyY = -200.0f;
+			enemy.EnemyX = -200;
+			enemy.EnemyY = -200;
 			Speed = 0;
 			enemycount += 10;
 
-			bul2.bulX = -100.0f;
-			bul2.bulY = -100.0f;
+			bul2.bulX = -100;
+			bul2.bulY = -100;
 		}
 		if (E_getpos3 < bul3.bulR + enemy.EnemyR)
 		{
 			bul3.isbulFlag = 0;
 			enemy.isEnemyAlive = 0;
-			enemy.EnemyX = -200.0f;
-			enemy.EnemyY = -200.0f;
+			enemy.EnemyX = -200;
+			enemy.EnemyY = -200;
 			Speed = 0;
 			enemycount += 10;
 
-			bul3.bulX = -100.0f;
-			bul3.bulY = -100.0f;
+			bul3.bulX = -100;
+			bul3.bulY = -100;
 		}
 	}
 	if (enemy.isEnemyAlive == 0)
@@ -398,8 +398,8 @@ void BulletUpdata()
 		{
 			enemy.isEnemyAlive = 1;
 			enemy.enemyTymer = 120;
-			enemy.EnemyX = rand() % 200 + 100.0f;
-			enemy.EnemyY = 10.0f;
+			enemy.EnemyX = rand() % 200 + 100;
+			enemy.EnemyY = 10;
 			if (rand() % 2)
 			{
 				Speed = 2;
@@ -411,46 +411,46 @@ void BulletUpdata()
 
 		}
 	}
-	E_getpos4 = sqrtf((enemy2.EnemyX - bul.bulX) * (enemy2.EnemyX - bul.bulX) + (enemy2.EnemyY - bul.bulY) * (enemy2.EnemyY - bul.bulY));
-	E_getpos5 = sqrtf((enemy2.EnemyX - bul2.bulX) * (enemy2.EnemyX - bul2.bulX) + (enemy2.EnemyY - bul2.bulY) * (enemy2.EnemyY - bul2.bulY));
-	E_getpos6 = sqrtf((enemy2.EnemyX - bul3.bulX) * (enemy2.EnemyX - bul3.bulX) + (enemy2.EnemyY - bul3.bulY) * (enemy2.EnemyY - bul3.bulY));
+	E_getpos4 = sqrt((enemy2.EnemyX - bul.bulX) * (enemy2.EnemyX - bul.bulX) + (enemy2.EnemyY - bul.bulY) * (enemy2.EnemyY - bul.bulY));
+	E_getpos5 = sqrt((enemy2.EnemyX - bul2.bulX) * (enemy2.EnemyX - bul2.bulX) + (enemy2.EnemyY - bul2.bulY) * (enemy2.EnemyY - bul2.bulY));
+	E_getpos6 = sqrt((enemy2.EnemyX - bul3.bulX) * (enemy2.EnemyX - bul3.bulX) + (enemy2.EnemyY - bul3.bulY) * (enemy2.EnemyY - bul3.bulY));
 	if (bul.isbulFlag == 1 || bul2.isbulFlag == 1 || bul3.isbulFlag == 1 || enemy2.isEnemyAlive == 1)
 	{
 		if (E_getpos4 < bul.bulR + enemy2.EnemyR)
 		{
 			bul.isbulFlag = 0;
 			enemy2.isEnemyAlive = 0;
-			enemy2.EnemyX = -200.0f;
-			enemy2.EnemyY = -200.0f;
+			enemy2.EnemyX = -200;
+			enemy2.EnemyY = -200;
 			Speed2 = 0;
 			enemycount += 15;
 
-			bul.bulX = -100.0f;
-			bul.bulY = -100.0f;
+			bul.bulX = -100;
+			bul.bulY = -100;
 		}
 		if (E_getpos5 < bul2.bulR + enemy2.EnemyR)
 		{
 			bul2.isbulFlag = 0;
 			enemy2.isEnemyAlive = 0;
-			enemy2.EnemyX = -200.0f;
-			enemy2.EnemyY = -200.0f;
+			enemy2.EnemyX = -200;
+			enemy2.EnemyY = -200;
 			Speed2 = 0;
 			enemycount += 15;
 
-			bul2.bulX = -100.0f;
-			bul2.bulY = -100.0f;
+			bul2.bulX = -100;
+			bul2.bulY = -100;
 		}
 		if (E_getpos6 < bul3.bulR + enemy2.EnemyR)
 		{
 			bul3.isbulFlag = 0;
 			enemy2.isEnemyAlive = 0;
-			enemy2.EnemyX = -200.0f;
-			enemy2.EnemyY = -200.0f;
+			enemy2.EnemyX = -200;
+			enemy2.EnemyY = -200;
 			Speed2 = 0;
 			enemycount += 15;
 
-			bul3.bulX = -100.0f;
-			bul3.bulY = -100.0f;
+			bul3.bulX = -100;
+			bul3.bulY = -100;
 		}
 	}
 	if (enemy2.isEnemyAlive == 0)
@@ -460,8 +460,8 @@ void BulletUpdata()
 		{
 			enemy2.isEnemyAlive = 1;
 			enemy2.enemyTymer = 120;
-			enemy2.EnemyX = rand() % 200 + 100.0f;
-			enemy2.EnemyY = 100.0f;
+			enemy2.EnemyX = rand() % 200 + 100;
+			enemy2.EnemyY = 100;
 			if (rand() % 2)
 			{
 				Speed2 = 2;
@@ -475,12 +475,12 @@ void BulletUpdata()
 }
 void Initialize()
 {
-	play.PlayerX = 250.0f, play.PlayerY = 250.0f;
-	enemy.EnemyX = 10.0f, enemy.EnemyY = 10.0f, enemy.EnemyR = 18.0f, enemy.isEnemyAlive = 1, enemy.enemyTymer = 120;
-	enemy2.EnemyX = 500.0f, enemy2.EnemyY = 100.0f, enemy2.EnemyR = 16.0f, enemy2.isEnemyAlive = 1, enemy2.enemyTymer = 120;
-	bul.bulX = -10.0f, bul.bulY = -10.0f, bul.bulR = 10.0f, bul.isbulFlag = 0;
-	bul2.bulX = -10.0f, bul2.bulY = -10.0f, bul2.bulR = 10.0f, bul2.isbulFlag = 0;
-	bul3.bulX = -10.0f, bul3.bulY = -10.0f, bul3.bulR = 10.0f, bul3.isbulFlag = 0;
+	play.PlayerX = 250, play.PlayerY = 250;
+	enemy.EnemyX = 10, enemy.EnemyY = 10, enemy.EnemyR = 18, enemy.isEnemyAlive = 1, enemy.enemyTymer = 120;
+	enemy2.EnemyX = 500, enemy2.EnemyY = 100, enemy2.EnemyR = 16, enemy2.isEnemyAlive = 1, enemy2.enemyTymer = 120;
+	bul.bulX = -10, bul.bulY = -10, bul.bulR = 10, bul.isbulFlag = 0;
+	bul2.bulX = -10, bul2.bulY = -10, bul2.bulR = 10, bul2.isbulFlag = 0;
+	bul3.bulX = -10, bul3.bulY = -10, bul3.bulR = 10, bul3.isbulFlag = 0;
 
 
 }
