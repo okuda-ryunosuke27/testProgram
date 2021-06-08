@@ -19,6 +19,7 @@ typedef struct {
 	int EnemyR;
 	int isEnemyAlive;
 	int enemyTymer;
+	int Speed;
 }Enemy;
 typedef struct {
 	int EnemyX;
@@ -26,6 +27,7 @@ typedef struct {
 	int EnemyR;
 	int isEnemyAlive;
 	int enemyTymer;
+	int Speed;
 }Enemy2;
 typedef struct {
 	int bulX;
@@ -55,8 +57,8 @@ Bullet3 bul3;
 
 int E_getpos, E_getpos2, E_getpos3;
 int E_getpos4, E_getpos5, E_getpos6;
-int Speed = 2.0f, Speed2 = 2.0f, Speed3 = 2.0f;
 int enemycount = 0;
+int timer = 0;
 
 int bgX = 0, bgY = 0;
 int bg2X = 0, bg2Y = -400;
@@ -95,7 +97,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SetWindowSizeExtendRate(1.0);
 
 	//画面の背景色を設定する
-	SetBackgroundColor(0x00, 0x00, 0xAF);
+	SetBackgroundColor(0x00, 0x00, 0x00);
 
 	// ＤＸライブラリ初期化処理
 	if (DxLib_Init() == -1)
@@ -110,6 +112,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int back1 = LoadGraph("background.png");
 	int back2 = LoadGraph("background2.png");
 	int player = LoadGraph("ico.jpg");
+	int title = LoadGraph("title.png");
+	int ent = LoadGraph("Enter.png");
 
 	srand(time(NULL));
 	Initialize();
@@ -131,10 +135,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//更新処理
 		if (scene == 0)
 		{
+			DrawGraph(0, 0, title, TRUE);
+			
+			timer++;
+			if (timer % 30)
+			{
+				DrawGraph(160, 200, ent, TRUE);
+			}
 			if (keys[KEY_INPUT_RETURN] == 1 && oldkeys[KEY_INPUT_RETURN] == 0)
 			{
 				scene = 1;
 			}
+			
 		}
 		if (scene == 1)
 		{
@@ -162,7 +174,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			{
 				PlayerY = -32;
 			}*/
-
+			timer--;
+			if (timer <= 0)
+			{
+				scene = 2;
+			}
+			
 			//描画処理
 			//背景スクロール
 			DrawGraph(bgX, bgY, back1, FALSE);
@@ -215,14 +232,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				"復活カウント:%3d", enemy.enemyTymer);
 			DrawFormatString(0, 550, GetColor(255, 255, 255),
 				"score:%3dpt", enemycount);
+			DrawFormatString(110, 550, GetColor(255, 255, 255),
+				"score:%3dpt", timer);
 		}
-		if (enemycount >= 100)
+		if (scene == 2)
 		{
-			scene = 2;
+			DrawGraph(0, 0, back1, TRUE);
 			SetFontSize(20);
-			DrawFormatString(250, 300, GetColor(255, 255, 255),
+			DrawFormatString(220, 200, GetColor(255, 255, 255),
 				"スコアは：%3d点", enemycount);
-			
+			if (keys[KEY_INPUT_RETURN] == 1)
+			{
+				Initialize();
+				scene = 0;
+				enemycount = 0;
+			}
 		}
 	
 		//(ダブルバッファ)裏面
@@ -290,16 +314,16 @@ void EnemyUpdata()
 	//敵の行動(レッド)
 	if (enemy.EnemyX + 30 >= 600 || enemy.EnemyX <= 0)
 	{
-		Speed *= -1;
+		enemy.Speed *= -1;
 	}
-	enemy.EnemyX += Speed;
+	enemy.EnemyX += enemy.Speed;
 
 	//敵の行動(イエロー)
 	if (enemy2.EnemyX + 16 >= 600 || enemy2.EnemyX - 16 <= 0)
 	{
-		Speed2 *= -1;
+		enemy2.Speed *= -1;
 	}
-	enemy2.EnemyX += Speed2;
+	enemy2.EnemyX += enemy2.Speed;
 }
 void BulletUpdata()
 {
@@ -360,7 +384,7 @@ void BulletUpdata()
 			enemy.isEnemyAlive = 0;
 			enemy.EnemyX = -200;
 			enemy.EnemyY = -200;
-			Speed = 0;
+			enemy.Speed = 0;
 			enemycount += 10;
 
 			bul.bulX = -100;
@@ -372,7 +396,7 @@ void BulletUpdata()
 			enemy.isEnemyAlive = 0;
 			enemy.EnemyX = -200;
 			enemy.EnemyY = -200;
-			Speed = 0;
+			enemy.Speed = 0;
 			enemycount += 10;
 
 			bul2.bulX = -100;
@@ -384,7 +408,7 @@ void BulletUpdata()
 			enemy.isEnemyAlive = 0;
 			enemy.EnemyX = -200;
 			enemy.EnemyY = -200;
-			Speed = 0;
+			enemy.Speed = 0;
 			enemycount += 10;
 
 			bul3.bulX = -100;
@@ -402,11 +426,11 @@ void BulletUpdata()
 			enemy.EnemyY = 10;
 			if (rand() % 2)
 			{
-				Speed = 2;
+				enemy.Speed = 2;
 			}
 			else
 			{
-				Speed = -2;
+				enemy.Speed = -2;
 			}
 
 		}
@@ -422,7 +446,7 @@ void BulletUpdata()
 			enemy2.isEnemyAlive = 0;
 			enemy2.EnemyX = -200;
 			enemy2.EnemyY = -200;
-			Speed2 = 0;
+			enemy2.Speed = 0;
 			enemycount += 15;
 
 			bul.bulX = -100;
@@ -434,7 +458,7 @@ void BulletUpdata()
 			enemy2.isEnemyAlive = 0;
 			enemy2.EnemyX = -200;
 			enemy2.EnemyY = -200;
-			Speed2 = 0;
+			enemy2.Speed = 0;
 			enemycount += 15;
 
 			bul2.bulX = -100;
@@ -446,7 +470,7 @@ void BulletUpdata()
 			enemy2.isEnemyAlive = 0;
 			enemy2.EnemyX = -200;
 			enemy2.EnemyY = -200;
-			Speed2 = 0;
+			enemy2.Speed = 0;
 			enemycount += 15;
 
 			bul3.bulX = -100;
@@ -464,11 +488,11 @@ void BulletUpdata()
 			enemy2.EnemyY = 100;
 			if (rand() % 2)
 			{
-				Speed2 = 2;
+				enemy2.Speed = 2;
 			}
 			else
 			{
-				Speed2 = -2;
+				enemy2.Speed = -2;
 			}
 		}
 	}
@@ -476,11 +500,11 @@ void BulletUpdata()
 void Initialize()
 {
 	play.PlayerX = 250, play.PlayerY = 250;
-	enemy.EnemyX = 10, enemy.EnemyY = 10, enemy.EnemyR = 18, enemy.isEnemyAlive = 1, enemy.enemyTymer = 120;
-	enemy2.EnemyX = 500, enemy2.EnemyY = 100, enemy2.EnemyR = 16, enemy2.isEnemyAlive = 1, enemy2.enemyTymer = 120;
+	enemy.EnemyX = 10, enemy.EnemyY = 10, enemy.EnemyR = 18, enemy.isEnemyAlive = 1, enemy.enemyTymer = 120, enemy.Speed = 2;
+	enemy2.EnemyX = 500, enemy2.EnemyY = 100, enemy2.EnemyR = 16, enemy2.isEnemyAlive = 1, enemy2.enemyTymer = 120, enemy2.Speed = 2;
 	bul.bulX = -10, bul.bulY = -10, bul.bulR = 10, bul.isbulFlag = 0;
 	bul2.bulX = -10, bul2.bulY = -10, bul2.bulR = 10, bul2.isbulFlag = 0;
 	bul3.bulX = -10, bul3.bulY = -10, bul3.bulR = 10, bul3.isbulFlag = 0;
-
+	timer = 1200;
 
 }
