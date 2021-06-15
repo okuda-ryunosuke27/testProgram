@@ -1,3 +1,9 @@
 ﻿  main.cpp
-C:\test\test\main.cpp(134,18): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
+C:\test\test\main.cpp(127,12): warning C4244: '引数': 'time_t' から 'unsigned int' への変換です。データが失われる可能性があります。
+C:\test\test\main.cpp(393,17): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
+C:\test\test\main.cpp(394,18): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
+C:\test\test\main.cpp(395,18): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
+C:\test\test\main.cpp(455,18): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
+C:\test\test\main.cpp(456,18): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
+C:\test\test\main.cpp(457,18): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
   test.vcxproj -> C:\test\Debug\test.exe
