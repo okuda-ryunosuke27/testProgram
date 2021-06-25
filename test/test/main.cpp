@@ -2,6 +2,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+
+#define SOUND_VOLUME 60
+
 const char TITLE[] = "TestProgram";
 
 //ウィンドウサイズ
@@ -59,6 +62,8 @@ int E_getpos, E_getpos2, E_getpos3;
 int E_getpos4, E_getpos5, E_getpos6;
 int enemycount = 0;
 int timer = 0;
+int bgm, bgm1;
+int se;
 
 int bgX = 0, bgY = 0;
 int bg2X = 0, bg2Y = -400;
@@ -77,6 +82,8 @@ void PlayerUpdata();
 void EnemyUpdata();
 void BulletUpdata();
 void Initialize();
+void Sound();
+
 // プログラムは WinMain から始まります
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -114,10 +121,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int player = LoadGraph("ico.jpg");
 	int title = LoadGraph("title.png");
 	int ent = LoadGraph("Enter.png");
-
+	bgm = LoadSoundMem("Legacy_Battle.mp3");
+	bgm1 = LoadSoundMem("Hostile_Action.mp3");
+	se = LoadSoundMem("beam1.mp3");
 	srand(time(NULL));
 	Initialize();
-
+	
+	
 	//ゲームループ
 	while (1)
 	{
@@ -132,6 +142,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//画面クリア
 		ClearDrawScreen();
 		
+
 		//更新処理
 		if (scene == 0)
 		{
@@ -144,6 +155,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 			if (keys[KEY_INPUT_RETURN] == 1 && oldkeys[KEY_INPUT_RETURN] == 0)
 			{
+				StopSoundMem(bgm1);
+				Sound();
 				scene = 1;
 			}
 			
@@ -156,7 +169,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			(*pl)();
 			(*en)();
 			(*bu)();
-
+			
 			//パックマン壁端移動
 			/*if (PlayerX > 600)
 			{
@@ -178,6 +191,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			if (timer <= 0)
 			{
 				scene = 2;
+				StopSoundMem(bgm);
 			}
 			
 			//描画処理
@@ -343,6 +357,9 @@ void BulletUpdata()
 			bul.isbulFlag = 1;
 			bul2.isbulFlag = 1;
 			bul3.isbulFlag = 1;
+
+			ChangeVolumeSoundMem(SOUND_VOLUME, se);
+			PlaySoundMem(se, DX_PLAYTYPE_BACK);
 		}
 	}
 
@@ -507,4 +524,11 @@ void Initialize()
 	bul3.bulX = -10, bul3.bulY = -10, bul3.bulR = 10, bul3.isbulFlag = 0;
 	timer = 1200;
 
+	ChangeVolumeSoundMem(SOUND_VOLUME, bgm1);
+	PlaySoundMem(bgm1, DX_PLAYTYPE_BACK);
+}
+void Sound()
+{
+	ChangeVolumeSoundMem(SOUND_VOLUME, bgm);
+	PlaySoundMem(bgm, DX_PLAYTYPE_BACK);
 }
