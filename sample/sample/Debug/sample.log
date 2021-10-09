@@ -1,0 +1,21 @@
+﻿  main.cpp
+C:\sample\sample\main.cpp(84,6): error C2199: 構文エラー: グローバル スコープで 'void (' が見つかりました。
+C:\sample\sample\main.cpp(136,12): warning C4244: '引数': 'time_t' から 'unsigned int' への変換です。データが失われる可能性があります。
+C:\sample\sample\main.cpp(145,21): error C2065: 'keys': 定義されていない識別子です。
+C:\sample\sample\main.cpp(161,8): error C2065: 'keys': 定義されていない識別子です。
+C:\sample\sample\main.cpp(161,39): error C2065: 'oldkeys': 定義されていない識別子です。
+C:\sample\sample\main.cpp(263,8): error C2065: 'keys': 定義されていない識別子です。
+C:\sample\sample\main.cpp(334,6): error C2065: 'keys': 定義されていない識別子です。
+C:\sample\sample\main.cpp(334,36): error C2065: 'oldkeys': 定義されていない識別子です。
+C:\sample\sample\main.cpp(509,10): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
+C:\sample\sample\main.cpp(514,10): warning C4244: '=': 'double' から 'int' への変換です。データが失われる可能性があります。
+  player.cpp
+C:\sample\sample\player.cpp(14,11): error C2065: 'KEY_INPUT_UP': 定義されていない識別子です。
+C:\sample\sample\player.cpp(14,38): error C2065: 'KEY_INPUT_W': 定義されていない識別子です。
+C:\sample\sample\player.cpp(18,11): error C2065: 'KEY_INPUT_DOWN': 定義されていない識別子です。
+C:\sample\sample\player.cpp(18,40): error C2065: 'KEY_INPUT_S': 定義されていない識別子です。
+C:\sample\sample\player.cpp(22,11): error C2065: 'KEY_INPUT_RIGHT': 定義されていない識別子です。
+C:\sample\sample\player.cpp(22,41): error C2065: 'KEY_INPUT_D': 定義されていない識別子です。
+C:\sample\sample\player.cpp(26,11): error C2065: 'KEY_INPUT_LEFT': 定義されていない識別子です。
+C:\sample\sample\player.cpp(26,40): error C2065: 'KEY_INPUT_A': 定義されていない識別子です。
+  コードを生成中...
